@@ -1,50 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
+
 <head>
-    <title>TODO App</title>
-    <link rel="stylesheet" href="todo.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css">
-</head>
-<header>
-   <h1>TODO TASK</h1>
-</header>
-<body>
-    <div class="full">
-        
-        <div id="add">
-            <span>Add Task</span>
-            <i class="fa fa-plus"></i>
-        </div>
-        <h4 >Tasks</h4>
-        
-        <div id="tasks">          
-            
-
-               
-        </div>
-        <div class="pop" id="pop">
-        
-            <div class="pop1">
-
-               <div class="head">
-                   <p>Staff Name</p>
-                   <p class="close">+</p>
-                </div>
-                <form id="form">
-                <div class="subform">
-                    <input type="text" placeholder="Enter task" id="textInput">                 
-                   
-                    <div id="error"></div>               
-               
-                
-                    <button type="submit"  class = submit id="submit" onkeyup="formvalidate()" onblur="formvalidate()"  class="button">Submit</button>
-                 </div>
-              </form>
-            </div>
-         </div>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    
+    <link rel="stylesheet" href="main.css">
    
-    </div>
-          <script src="pop.js"></script>
-        
+    <script src="main.js" defer></script>
+    <title>CRUD</title>
+</head>
+
+<body>
+    <header>
+        <h1 class="header-title">TODO APP</h1>
+    </header>
+    <main>
+        <button type="button" class="button blue mobile" id="add">ADD</button>
+        <table id="tableClient" class="records">
+            <thead>
+                <tr>
+                    <th>NAME</th>
+                    <th>E-mail</th>
+                    <th>ADDRESS</th>
+                    <th>PHONENO</th>
+                    <th>OPTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+        <div class="modal" id="modal">
+            <div class="modal-content">
+                <header class="modal-header">
+                    <h2>STAFF DETAILS</h2>
+                    <span class="modal-close" id="modalClose"></span>
+                </header>
+                <form id="form" class="modal-form">
+                    <input type="text" id="nome" data-index="new" class="modal-field" placeholder="NAME"
+                        required>
+                    <input type="email" id="email" class="modal-field" placeholder="E-mail" required>
+                    <input type="text" id="Address" class="modal-field" placeholder="ADDRESS" required>
+                    <input type="text" id="Phone" class="modal-field" placeholder="PHONE" required>
+                </form>
+                <footer class="modal-footer">
+                    <button id="save" class="button green">Save</button>
+                    <button id="cancel" class="button blue">Cancel</button>
+                </footer>
+            </div>
+        </div>
+    </main>
+    <footer>
+        DHIVYAJOTHI
+    </footer>
 </body>
+
 </html>
