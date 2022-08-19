@@ -1,89 +1,138 @@
-document.getElementById('add').addEventListener('click',function()
-{
- document.querySelector('.pop').style.display="flex";
-});
+const openModal = () => document.getElementById('modal')
+    .classList.add('active')
+
+const closeModal = () => {
+    clearFields()
+    document.getElementById('modal').classList.remove('active')
+}
 
 
-document.querySelector('.close').addEventListener('click',function()
-{
- document.querySelector('.pop').style.display="none";
-});
+const getLocalStorage = () => JSON.parse(localStorage.getItem('db_client')) ?? []
+const setLocalStorage = (dbClient) => localStorage.setItem("db_client", JSON.stringify(dbClient))
 
-let textInput=document.getElementById("textInput");
-let msg=document.getElementById("error");
-let form=document.getElementById("form");
-let tasks=document.getElementById("tasks");
-    form.addEventListener("submit",function(e)
-        {
-          e.preventDefault();
-          formvalidate();
+// CRUD - create read update delete
+const deleteClient = (index) => {
+    const dbClient = readClient()
+    dbClient.splice(index, 1)
+    setLocalStorage(dbClient)
+}
+
+const updateClient = (index, client) => {
+    const dbClient = readClient()
+    dbClient[index] = client
+    setLocalStorage(dbClient)
+}
+
+const readClient = () => getLocalStorage()
+
+const createClient = (client) => {
+    const dbClient = getLocalStorage()
+    dbClient.push (client)
+    setLocalStorage(dbClient)
+}
+
+const isValidFields = () => {
+    return document.getElementById('form').reportValidity()
+}
+
+
+
+const clearFields = () => {
+    const fields = document.querySelectorAll('.modal-field')
+    fields.forEach(field => field.value = "")
+}
+
+const saveClient = () => {
+    if (isValidFields()) {
+        const client = {
+            nome: document.getElementById('nome').value,
+            email: document.getElementById('email').value,
+            celular: document.getElementById('Address').value,
+            cidade: document.getElementById('Phone').value
         }
-    ); 
-
-let data=[];
-let acceptData= function()
-{
-    data.push(
-        {
-        name:textInput.value,
-    });
-    localStorage.setItem("data", JSON.stringify(data));
-    console.log(data);
-    createTasks();
-}; 
-let formvalidate=function()
-{
-    if(textInput.value ==="")
-    {
-     console.log("failure");
-     msg.innerHTML="*Mandatory";
+        const index = document.getElementById('nome').dataset.index
+        if (index == 'new') {
+            createClient(client)
+            updateTable()
+            closeModal()
+        } else {
+            updateClient(index, client)
+            updateTable()
+            closeModal()
+        }
     }
-    else
-    {
-        console.log("success");
-        msg.innerHTML="";
-        acceptData();
-        
-    }; 
 }
-let createTasks=function()
-{  
-  tasks.innerHTML+=`
-  <div>
-  <span>${textInput.value}</span>
-  
-  
-  <span class="options">
-      <i onclick="editTask(this)"class="fa-solid fa-pen-to-square"></i>
-      <i onclick="deleteForm(this)" class="fa-solid fa-trash-can"></i>
-  </span>
-</div>
-`;
- resetForm();
-};
-let deleteForm=function(e)
-{
-   e.parentElement.parentElement.remove();
-   
-}
-let editTask = function(e) { 
-document.getElementById('tasks').addEventListener('click',function()
-{
- document.querySelector('.pop').style.display="flex";
-});
-document.querySelector('.submit').addEventListener('click',function()
-{
- document.querySelector('.pop').style.display="none";
-});
-   
-let selectedTask = e.parentElement.parentElement;
-textInput.value = selectedTask.children[0].innerHTML;
-selectedTask.remove();
-};
 
-let resetForm=function()
-{
-    textInput.value="";
-    
-    
+const createRow = (client, index) => {
+    const newRow = document.createElement('tr')
+    newRow.innerHTML = `
+        <td>${client.nome}</td>
+        <td>${client.email}</td>
+        <td>${client.Address}</td>
+        <td>${client.Phone}</td>
+        <td>
+            <button type="button" class="button green" id="edit-${index}">Edit</button>
+            <button type="button" class="button red" id="delete-${index}" >Delete</button>
+        </td>
+    `
+    document.querySelector('#tableClient>tbody').appendChild(newRow)
 }
+
+const clearTable = () => {
+    const rows = document.querySelectorAll('#tableClient>tbody tr')
+    rows.forEach(row => row.parentNode.removeChild(row))
+}
+
+const updateTable = () => {
+    const dbClient = readClient()
+    clearTable()
+    dbClient.forEach(createRow)
+}
+
+const fillFields = (client) => {
+    document.getElementById('nome').value = client.nome
+    document.getElementById('email').value = client.email
+    document.getElementById('Address').value = client.Address
+    document.getElementById('Phone').value = client.Phone
+    document.getElementById('nome').dataset.index = client.index
+}
+
+const editClient = (index) => {
+    const client = readClient()[index]
+    client.index = index
+    fillFields(client)
+    openModal()
+}
+
+const editDelete = (event) => {
+    if (event.target.type == 'button') {
+
+        const [action, index] = event.target.id.split('-')
+
+        if (action == 'edit') {
+            editClient(index)
+        } else {
+            
+                deleteClient(index)
+                updateTable()
+            }
+        }
+    }
+
+updateTable()
+
+// Event
+document.getElementById('add')
+    .addEventListener('click', openModal)
+
+document.getElementById('modalClose')
+    .addEventListener('click', closeModal)
+
+document.getElementById('save')
+    .addEventListener('click', saveClient)
+
+document.querySelector('#tableClient>tbody')
+    .addEventListener('click', editDelete)
+
+document.getElementById('cancel')
+    .addEventListener('click', closeModal)
