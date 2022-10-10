@@ -47,8 +47,8 @@ const saveClient = () => {
         const client = {
             nome: document.getElementById('nome').value,
             email: document.getElementById('email').value,
-            celular: document.getElementById('Address').value,
-            cidade: document.getElementById('Phone').value
+            Address: document.getElementById('Address').value,
+            Phone: document.getElementById('Phone').value
         }
         const index = document.getElementById('nome').dataset.index
         if (index == 'new') {
